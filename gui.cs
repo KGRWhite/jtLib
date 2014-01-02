@@ -3,13 +3,49 @@ using System.Collections;
 
 public class gui : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+    
+    int localObjCounter = 0;
+   
+     private int toolbarInt = 0;
+	 private string[] toolbarStrings = {"Barrel", "Cube", "Sphere"};
+
+     void Start()
+     {
+         
+         
+     }
+
+
+
+     void Update()
+     {
+         if (toolbarInt == 0)
+             SendMessage("switchToBarrels");
+
+         if (toolbarInt == 1)
+             SendMessage("switchToCubes");
+
+         if (toolbarInt == 2)
+             SendMessage("switchToSpheres");
+     }
+
+
+     void incrementObjCount()
+     {
+         localObjCounter++;
+     }
+
+	void OnGUI () 
+    {
+        string op = "Number of objects: " + localObjCounter;
+        
+        GUI.TextArea(new Rect(20, 10, 250, 30), "                 Stuff to play with");
+        toolbarInt = GUI.Toolbar (new Rect (20, 40, 250, 30), toolbarInt, toolbarStrings);
+        
+        GUI.TextArea(new Rect(20, 80, 150, 50), op);
+
+        if (GUI.Button(new Rect(20, 140, 80, 30), "Quit Demo"))
+            Application.Quit();
 	}
 }
+

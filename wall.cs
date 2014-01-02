@@ -8,12 +8,12 @@ public class wall  {
 
     public wall(Vector3 pos,Vector3 angle)
     {
-        
-        
+
+        GameObject walls = new GameObject("walls");
         
         cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-        createTexture();
+        
+        setMaterial();
         
         cube.transform.localScale = new Vector3(10,3,1);
         cube.transform.position = pos;
@@ -22,9 +22,12 @@ public class wall  {
     }
 
 
-    void createTexture()
+    void setMaterial() //Load material from Resources, set texture & bumpmap size.
     {
-        cube.renderer.material.mainTexture = Resources.Load<Texture2D>("Bricks");
+        cube.renderer.material = Resources.Load<Material>("Bricks");
+        cube.renderer.material.mainTextureScale = new Vector2(25, 2);
+        cube.renderer.material.SetTextureScale("_BumpMap",new Vector2(25,2));
+        
     }
 
 
