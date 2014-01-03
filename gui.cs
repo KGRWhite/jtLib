@@ -9,14 +9,7 @@ public class gui : MonoBehaviour {
      private int toolbarInt = 0;
 	 private string[] toolbarStrings = {"Barrel", "Cube", "Sphere"};
 
-     void Start()
-     {
-         
-         
-     }
-
-
-
+     
      void Update()
      {
          if (toolbarInt == 0)
@@ -35,6 +28,11 @@ public class gui : MonoBehaviour {
          localObjCounter++;
      }
 
+     void resetObjCounter()
+     {
+         localObjCounter = 0;
+     }
+
 	void OnGUI () 
     {
         string op = "Number of objects: " + localObjCounter;
@@ -46,6 +44,9 @@ public class gui : MonoBehaviour {
 
         if (GUI.Button(new Rect(20, 140, 80, 30), "Quit Demo"))
             Application.Quit();
+
+        if (GUI.Button(new Rect(120, 140, 80, 30), "Clear Obj's"))
+            SendMessage("removeAllObjects");
 	}
 }
 

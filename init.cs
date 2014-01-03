@@ -1,45 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class init : MonoBehaviour {
 
-
-    GameObject cubeObj;
-    GameObject sphereObj;
+    //Variables
+    GameObject barrelObj, cubeObj, sphereObj;
     bool barrelMode, cubeMode, sphereMode;
-    
-    
-    
-    void OnAwake()
-    {
-        
-    }
-    
-    
+
+    //Data Structures
+    List<GameObject> goObjs = new List<GameObject>();
+       
 
 	void Start () {
+        
+        //On initialization set to default toolbar values.
         barrelMode = true;
         cubeMode = false;
         sphereMode = false;
         
+        // Run Lighting and Scene Methods to build Scene.
         createLighting();
         createScene();
-        createPlayer();
-        createEntities();
 
-       cubeObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cubeObj.AddComponent<Rigidbody>();
-        cubeObj.transform.position =new Vector3(-10, -10, -10);
-        sphereObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphereObj.AddComponent<Rigidbody>();
-        sphereObj.transform.position = new Vector3(-9, -9, -9);
+        // Generates a ready made barrel which will act as a parent for all Instantiated barrels.
+        barrelObj = jtEntities.createBarrel();
+        barrelObj.transform.position = new Vector3(-10, -10, -10);
+
+        // Generates a ready made cube which will act as a parent for all Instantiated cube.
+        cubeObj = jtEntities.createCube();
+        cubeObj.transform.position = new Vector3(-10, -10, -10);
+
+        // Generates a ready made sphere which will act as a parent for all Instantiated spheres.
+        sphereObj = jtEntities.createSphere();
+        sphereObj.transform.position = new Vector3(-10, -10, -10);
+               
 	}
 
 
 
     void Update()
     {
-       Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Input.GetMouseButtonDown(0))
         {
@@ -49,20 +53,23 @@ public class init : MonoBehaviour {
 
                 if (barrelMode == true)
                 {
-                    new barrel(new Vector3(hit.point.x, 2, hit.point.y), new Vector3(0, 0, 20));
+                    GameObject obj = (GameObject)Instantiate(barrelObj, new Vector3(hit.point.x, 2, hit.point.z), Quaternion.Euler(new Vector3(0, 0, 20)));
+                    goObjs.Add(obj);
                     SendMessage("incrementObjCount");
                 }
 
                 else if (cubeMode == true)
                 {
-                    
-                    Instantiate(cubeObj, new Vector3(hit.point.x, 2, hit.point.z),Quaternion.Euler(new Vector3(0,0,20)));
+
+                    GameObject obj = (GameObject)Instantiate(cubeObj, new Vector3(hit.point.x, 2, hit.point.z), Quaternion.Euler(new Vector3(0, 0, 20)));
+                    goObjs.Add(obj);
                     SendMessage("incrementObjCount");
                 }
 
                 else if (sphereMode == true)
                 {
-                    Instantiate(sphereObj, new Vector3(hit.point.x, 2, hit.point.z), Quaternion.Euler(new Vector3(0, 0, 20)));
+                   GameObject obj = (GameObject)Instantiate(sphereObj, new Vector3(hit.point.x, 2, hit.point.z), Quaternion.Euler(new Vector3(0, 0, 20)));
+                   goObjs.Add(obj);
                     SendMessage("incrementObjCount");
                 }
             }
@@ -104,18 +111,15 @@ public class init : MonoBehaviour {
     }
 
     
-    
-    void createEntities()
-    {
-        //new barrel(new Vector3(1,3,1),new Vector3(0,0,20));
-       // new barrel(new Vector3(-1, 3, 2), new Vector3(0, 0, -20));
-       // new barrel(new Vector3(-3, 3, 2), new Vector3(0, 0, 20));
-       // new barrel(new Vector3(4, 3, 1), new Vector3(0, 0, -20));
-    }
 
-    void createPlayer()
+    void removeAllObjects()
     {
-        //Player logic goes here
+        foreach (GameObject g in goObjs)
+        {
+            Destroy(g);
+        }
+        
+     SendMessage("resetObjCounter");
     }
 
 
